@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CountryService } from '../../services/country.service';
-import { switchMap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import { SmallCountry } from '../../interfaces/country';
 
 @Component({
@@ -33,6 +33,7 @@ export class SelectorPageComponent {
   onRegionChanged(){
     this.form.get('region')?.valueChanges
     .pipe(
+      tap(()=>this.form.get('country')?.setValue('')),
       //operador que permite recibir el valor de un observable y suscribirme a otro observable
       switchMap(region => this.countryService.getCountriesByRegion(region))
     )
