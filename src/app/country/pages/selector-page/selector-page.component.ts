@@ -15,7 +15,7 @@ export class SelectorPageComponent {
   ) {}
 
   countriesByRegion: SmallCountry[] = []
-  borders: string[] =[]
+  borders: SmallCountry[] =[]
 
   form: FormGroup = this.fb.group({
     region: ['', Validators.required],
@@ -39,7 +39,8 @@ export class SelectorPageComponent {
       tap(()=>this.borders = []),
 
       //operador que permite recibir el valor de un observable y suscribirme a otro observable
-      switchMap(region => this.countryService.getCountriesByRegion(region))
+      switchMap(region => this.countryService.getCountriesByRegion(region)),
+
     )
     .subscribe( countries => {
       this.countriesByRegion = countries
@@ -51,10 +52,11 @@ export class SelectorPageComponent {
     .pipe(
       tap(()=>this.form.get('borders')?.setValue('')),
       filter((value:string) => value.length > 0), //validamos que el código llegue con valor
-      switchMap(alphaCode => this.countryService.getCountryByAlphaCode(alphaCode))
+      switchMap(alphaCode => this.countryService.getCountryByAlphaCode(alphaCode)),
+      switchMap(country => this.countryService.getCountryBordersByCodes(country.borders))
     )
-    .subscribe( country => {
-      this.borders = country.borders
+    .subscribe( countries => {
+      this.borders = countries
     })
   }
 }
