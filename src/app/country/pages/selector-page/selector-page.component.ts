@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CountryService } from '../../services/country.service';
 import { switchMap } from 'rxjs';
+import { SmallCountry } from '../../interfaces/country';
 
 @Component({
   selector: 'app-selector-page',
@@ -12,6 +13,8 @@ export class SelectorPageComponent {
     private fb: FormBuilder,
     private countryService: CountryService
   ) {}
+
+  countriesByRegion: SmallCountry[] = []
 
   form: FormGroup = this.fb.group({
     region: ['', Validators.required],
@@ -33,8 +36,8 @@ export class SelectorPageComponent {
       //operador que permite recibir el valor de un observable y suscribirme a otro observable
       switchMap(region => this.countryService.getCountriesByRegion(region))
     )
-    .subscribe( region => {
-      console.log(region)
+    .subscribe( countries => {
+      this.countriesByRegion = countries
     })
   }
 }
