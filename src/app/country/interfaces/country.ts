@@ -161,3 +161,9 @@ export enum Subregion {
   SouthernEurope = 'Southern Europe',
   WesternEurope = 'Western Europe',
 }
+
+export interface SmallCountry{
+  name: string,
+  cca3: string,
+  borders:string[]
+}
